@@ -1,8 +1,10 @@
 import { resolve } from "path";
 import { defineConfig } from "vite";
 
+const isGitHubActions = process.env.GITHUB_ACTIONS === "true";
+
 export default defineConfig({
-  base: "/wdd330-SleepOutside-Tm14/",
+  base: isGitHubActions ? "/wdd330-SleepOutside-Tm14/" : "/",
   root: "src/",
 
   build: {
