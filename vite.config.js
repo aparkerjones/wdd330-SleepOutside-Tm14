@@ -2,6 +2,7 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
+  base: "/wdd330-SleepOutside-Tm14/",
   root: "src/",
 
   build: {
