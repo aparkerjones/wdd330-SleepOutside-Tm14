@@ -191,6 +191,17 @@ button {
   font-size: 1em;
 }
 
+.category-card {
+  text-align: center;
+}
+
+.category-card img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  margin: 0.5rem auto;
+}
+
 /* End product list card */
 
 .product-detail {
