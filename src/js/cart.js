@@ -2,17 +2,39 @@ import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
 
+function calculateCartTotal(items) {
+  return items.reduce((sum, item) => sum + Number(item.FinalPrice || 0), 0);
+}
+
+function renderCartTotal(items) {
+  const totalElement = document.querySelector(".cart-total");
+  if (!totalElement) {
+    return;
+  }
+
+  if (!items.length) {
+    totalElement.textContent = "Total: $0.00";
+    return;
+  }
+
+  const total = calculateCartTotal(items);
+  const itemLabel = items.length === 1 ? "item" : "items";
+  totalElement.textContent = `Total (${items.length} ${itemLabel}): $${total.toFixed(2)}`;
+}
+
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];
 
   if (!cartItems.length) {
     document.querySelector(".product-list").innerHTML =
       "<li>Your cart is empty.</li>";
+    renderCartTotal(cartItems);
     return;
   }
 
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  renderCartTotal(cartItems);
 }
 
 function cartItemTemplate(item) {

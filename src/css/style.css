@@ -252,6 +252,12 @@ button {
   grid-column: 3;
 }
 
+.cart-total {
+  text-align: right;
+  font-weight: 700;
+  margin-top: 1rem;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;
