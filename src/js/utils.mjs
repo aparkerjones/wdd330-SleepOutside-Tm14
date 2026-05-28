@@ -56,9 +56,10 @@ export async function loadHeaderFooter() {
     return;
   }
 
+  const basePath = import.meta.env.BASE_URL;
   const [headerTemplate, footerTemplate] = await Promise.all([
-    loadTemplate("/partials/header.html"),
-    loadTemplate("/partials/footer.html"),
+    loadTemplate(`${basePath}partials/header.html`),
+    loadTemplate(`${basePath}partials/footer.html`),
   ]);
 
   renderWithTemplate(headerTemplate, header);
