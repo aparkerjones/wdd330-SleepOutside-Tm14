@@ -258,6 +258,81 @@ button {
   margin-top: 1rem;
 }
 
+.cart-actions {
+  text-align: right;
+  padding: 0.75rem;
+}
+
+.checkout-link {
+  display: inline-block;
+  text-decoration: none;
+  background-color: var(--secondary-color);
+  color: white;
+  padding: 0.6rem 1.3rem;
+}
+
+.checkout {
+  max-width: 720px;
+  margin: 1.5rem auto;
+}
+
+.checkout-form fieldset {
+  border: 1px solid var(--light-grey);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.checkout-form legend {
+  font-weight: 700;
+  padding: 0 0.4rem;
+}
+
+.checkout-form label {
+  display: block;
+  margin-top: 0.75rem;
+}
+
+.checkout-form input {
+  width: 100%;
+  padding: 0.55rem;
+  border: 1px solid var(--light-grey);
+  font-size: 1rem;
+}
+
+.checkout-summary {
+  border: 1px solid var(--light-grey);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.checkout-summary p {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.45rem 0;
+}
+
+.checkout-total {
+  font-weight: 700;
+}
+
+.alert-message {
+  margin: 0;
+  padding: 1rem;
+  color: #8a1c11;
+  background-color: #ffe6e1;
+  border-left: 6px solid #c0392b;
+}
+
+.success-page {
+  max-width: 620px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.success-page p {
+  padding: 0.6rem 0;
+}
+
 @media screen and (min-width: 500px) {
   body {
     max-width: 1080px;

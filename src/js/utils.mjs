@@ -8,6 +8,34 @@ export function getLocalStorage(key) {
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
+
+export function alertMessage(message, scroll = true) {
+  const oldAlert = qs(".alert-message");
+  if (oldAlert) {
+    oldAlert.remove();
+  }
+
+  const main = qs("main");
+  if (!main) {
+    return;
+  }
+
+  const alert = document.createElement("p");
+  alert.className = "alert-message";
+  alert.textContent = message;
+  main.prepend(alert);
+
+  if (scroll) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+export function clearAlert() {
+  const oldAlert = qs(".alert-message");
+  if (oldAlert) {
+    oldAlert.remove();
+  }
+}
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
     event.preventDefault();

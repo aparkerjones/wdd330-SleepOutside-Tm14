@@ -12,8 +12,66 @@
     <header id="main-header" class="divider"></header>
 
     <main class="divider">
-      <section class="products">
-        <h2>Review and Place your Order</h2>
+      <section class="products checkout">
+        <h2>Review and Place Your Order</h2>
+
+        <form id="checkoutForm" class="checkout-form">
+          <fieldset>
+            <legend>Contact Information</legend>
+
+            <label for="fname">First Name</label>
+            <input id="fname" name="fname" type="text" required minlength="2" />
+
+            <label for="lname">Last Name</label>
+            <input id="lname" name="lname" type="text" required minlength="2" />
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+
+            <label for="phone">Phone</label>
+            <input
+              id="phone"
+              name="phone"
+              type="tel"
+              required
+              pattern="[0-9\-\+\(\)\s]{7,}"
+              title="Enter at least 7 digits."
+            />
+          </fieldset>
+
+          <fieldset>
+            <legend>Shipping Address</legend>
+
+            <label for="street">Street</label>
+            <input id="street" name="street" type="text" required />
+
+            <label for="city">City</label>
+            <input id="city" name="city" type="text" required />
+
+            <label for="state">State</label>
+            <input id="state" name="state" type="text" required minlength="2" maxlength="2" />
+
+            <label for="zip">Zip</label>
+            <input
+              id="zip"
+              name="zip"
+              type="text"
+              required
+              pattern="\d{5}(-\d{4})?"
+              title="Use 5 digits or ZIP+4 format."
+            />
+          </fieldset>
+
+          <div class="checkout-summary">
+            <h3>Order Summary</h3>
+            <p>Subtotal: <span id="order-subtotal">$0.00</span></p>
+            <p>Shipping: <span id="order-shipping">$0.00</span></p>
+            <p>Tax: <span id="order-tax">$0.00</span></p>
+            <p class="checkout-total">Order Total: <span id="order-total">$0.00</span></p>
+          </div>
+
+          <button id="checkoutSubmit" type="submit">Place Order</button>
+        </form>
       </section>
     </main>
 
