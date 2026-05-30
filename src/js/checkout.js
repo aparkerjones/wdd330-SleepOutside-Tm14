@@ -6,22 +6,17 @@ loadHeaderFooter();
 const myCheckout = new CheckoutProcess("#checkoutForm");
 myCheckout.init();
 
-const submitButton = document.querySelector("#checkoutSubmit");
+const checkoutForm = document.querySelector("#checkoutForm");
 
-if (submitButton) {
-	submitButton.addEventListener("click", (event) => {
-		event.preventDefault();
+if (checkoutForm) {
+  checkoutForm.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-		const checkoutForm = document.querySelector("#checkoutForm");
-		if (!checkoutForm) {
-			return;
-		}
+    if (!checkoutForm.checkValidity()) {
+      checkoutForm.reportValidity();
+      return;
+    }
 
-		const isValid = checkoutForm.checkValidity();
-		checkoutForm.reportValidity();
-
-		if (isValid) {
-			myCheckout.checkout();
-		}
-	});
+    myCheckout.checkout(checkoutForm);
+  });
 }

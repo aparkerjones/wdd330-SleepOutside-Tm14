@@ -17,33 +17,20 @@
 
         <form id="checkoutForm" class="checkout-form">
           <fieldset>
-            <legend>Contact Information</legend>
+            <legend>Customer Name</legend>
 
             <label for="fname">First Name</label>
             <input id="fname" name="fname" type="text" required minlength="2" />
 
             <label for="lname">Last Name</label>
             <input id="lname" name="lname" type="text" required minlength="2" />
-
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required />
-
-            <label for="phone">Phone</label>
-            <input
-              id="phone"
-              name="phone"
-              type="tel"
-              required
-              pattern="[0-9\-\+\(\)\s]{7,}"
-              title="Enter at least 7 digits."
-            />
           </fieldset>
 
           <fieldset>
-            <legend>Shipping Address</legend>
+            <legend>Address</legend>
 
-            <label for="street">Street</label>
-            <input id="street" name="street" type="text" required />
+            <label for="street">Street Address</label>
+            <input id="street" name="street" type="text" required minlength="3" />
 
             <label for="city">City</label>
             <input id="city" name="city" type="text" required />
@@ -62,6 +49,40 @@
             />
           </fieldset>
 
+          <fieldset>
+            <legend>Payment</legend>
+
+            <label for="cardNumber">Credit Card Number</label>
+            <input
+              id="cardNumber"
+              name="cardNumber"
+              type="text"
+              required
+              pattern="\d{13,19}"
+              title="Use 13-19 digits with no spaces."
+            />
+
+            <label for="expiration">Expiration Date</label>
+            <input
+              id="expiration"
+              name="expiration"
+              type="text"
+              required
+              pattern="(0[1-9]|1[0-2])\/\d{2,4}"
+              title="Use MM/YY or MM/YYYY format."
+            />
+
+            <label for="code">Security Code</label>
+            <input
+              id="code"
+              name="code"
+              type="text"
+              required
+              pattern="\d{3,4}"
+              title="Use 3 or 4 digits."
+            />
+          </fieldset>
+
           <div class="checkout-summary">
             <h3>Order Summary</h3>
             <p>Subtotal: <span id="order-subtotal">$0.00</span></p>
@@ -70,7 +91,7 @@
             <p class="checkout-total">Order Total: <span id="order-total">$0.00</span></p>
           </div>
 
-          <button id="checkoutSubmit" type="submit">Place Order</button>
+          <button id="checkoutSubmit" type="submit">Checkout</button>
         </form>
       </section>
     </main>

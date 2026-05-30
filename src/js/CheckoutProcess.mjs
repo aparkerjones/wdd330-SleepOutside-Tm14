@@ -10,10 +10,24 @@ export default class CheckoutProcess {
   constructor(formSelector) {
     this.form = document.querySelector(formSelector);
     this.services = new ExternalServices();
+    this.subtotal = 0;
+    this.shipping = 0;
+    this.tax = 0;
+    this.orderTotal = 0;
   }
 
   init() {
-    this.updateOrderSummary();
+    this.calculateOrderSubtotal();
+
+    const zipInput = this.form?.querySelector("#zip");
+    if (zipInput) {
+      zipInput.addEventListener("change", () => {
+        this.calculateOrderTotal();
+      });
+      zipInput.addEventListener("blur", () => {
+        this.calculateOrderTotal();
+      });
+    }
   }
 
   get cartItems() {
@@ -21,47 +35,74 @@ export default class CheckoutProcess {
   }
 
   calculateSubtotal() {
-    return this.cartItems.reduce((sum, item) => sum + Number(item.FinalPrice || 0), 0);
+    return this.cartItems.reduce(
+      (sum, item) => sum + Number(item.FinalPrice || 0),
+      0,
+    );
   }
 
-  updateOrderSummary() {
-    const subtotal = this.calculateSubtotal();
-    const shipping = subtotal > 0 ? 10 : 0;
-    const tax = subtotal * 0.06;
-    const total = subtotal + shipping + tax;
-
+  calculateOrderSubtotal() {
+    this.subtotal = this.calculateSubtotal();
     const subtotalEl = document.querySelector("#order-subtotal");
+    if (subtotalEl) {
+      subtotalEl.textContent = `$${this.subtotal.toFixed(2)}`;
+    }
+  }
+
+  calculateShipping(itemCount) {
+    if (!itemCount) {
+      return 0;
+    }
+
+    return 10 + (itemCount - 1) * 2;
+  }
+
+  calculateOrderTotal() {
+    this.calculateOrderSubtotal();
+    this.shipping = this.calculateShipping(this.cartItems.length);
+    this.tax = Number((this.subtotal * 0.06).toFixed(2));
+    this.orderTotal = Number((this.subtotal + this.shipping + this.tax).toFixed(2));
+
     const shippingEl = document.querySelector("#order-shipping");
     const taxEl = document.querySelector("#order-tax");
     const totalEl = document.querySelector("#order-total");
 
-    if (subtotalEl) subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
-    if (shippingEl) shippingEl.textContent = `$${shipping.toFixed(2)}`;
-    if (taxEl) taxEl.textContent = `$${tax.toFixed(2)}`;
-    if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+    if (shippingEl) {
+      shippingEl.textContent = `$${this.shipping.toFixed(2)}`;
+    }
+    if (taxEl) {
+      taxEl.textContent = `$${this.tax.toFixed(2)}`;
+    }
+    if (totalEl) {
+      totalEl.textContent = `$${this.orderTotal.toFixed(2)}`;
+    }
   }
 
-  buildOrderData() {
-    const formData = new FormData(this.form);
+  packageItems(items) {
+    return items.map((item) => ({
+      id: item.Id,
+      name: item.Name,
+      price: Number(item.FinalPrice || 0),
+      quantity: 1,
+    }));
+  }
 
-    const subtotal = this.calculateSubtotal();
-    const shipping = subtotal > 0 ? 10 : 0;
-    const tax = subtotal * 0.06;
-    const orderTotal = subtotal + shipping + tax;
+  formDataToJSON(formElement) {
+    const data = new FormData(formElement);
+    return Object.fromEntries(data.entries());
+  }
 
-    return {
-      orderDate: new Date().toISOString(),
-      fname: formData.get("fname"),
-      lname: formData.get("lname"),
-      street: formData.get("street"),
-      city: formData.get("city"),
-      state: formData.get("state"),
-      zip: formData.get("zip"),
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      items: this.cartItems,
-      total: Number(orderTotal.toFixed(2)),
-    };
+  buildOrderData(formElement) {
+    const orderData = this.formDataToJSON(formElement);
+    this.calculateOrderTotal();
+
+    orderData.orderDate = new Date().toISOString();
+    orderData.items = this.packageItems(this.cartItems);
+    orderData.orderTotal = this.orderTotal.toFixed(2);
+    orderData.shipping = this.shipping;
+    orderData.tax = this.tax.toFixed(2);
+
+    return orderData;
   }
 
   formatError(error) {
@@ -86,7 +127,7 @@ export default class CheckoutProcess {
     return "Something went wrong while placing your order. Please try again.";
   }
 
-  async checkout() {
+  async checkout(formElement = this.form) {
     clearAlert();
 
     if (!this.cartItems.length) {
@@ -94,7 +135,7 @@ export default class CheckoutProcess {
       return;
     }
 
-    const order = this.buildOrderData();
+    const order = this.buildOrderData(formElement);
 
     try {
       await this.services.checkout(order);
