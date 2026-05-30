@@ -9,6 +9,19 @@ export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
 
+export function updateCartCount() {
+  const badge = qs(".cart-count");
+  if (!badge) {
+    return;
+  }
+
+  const cartItems = getLocalStorage("so-cart") || [];
+  const count = cartItems.length;
+
+  badge.textContent = String(count);
+  badge.hidden = count === 0;
+}
+
 export function alertMessage(message, scroll = true) {
   const oldAlert = qs(".alert-message");
   if (oldAlert) {
@@ -95,4 +108,5 @@ export async function loadHeaderFooter() {
 
   renderWithTemplate(headerTemplate, header);
   renderWithTemplate(footerTemplate, footer);
+  updateCartCount();
 }

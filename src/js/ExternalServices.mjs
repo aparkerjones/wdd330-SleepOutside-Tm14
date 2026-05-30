@@ -1,17 +1,11 @@
 async function convertToJson(res) {
-  let jsonResponse = {};
-
-  try {
-    jsonResponse = await res.json();
-  } catch (error) {
-    jsonResponse = { message: "Unexpected server response." };
-  }
+  const jsonResponse = await res.json();
 
   if (res.ok) {
     return jsonResponse;
   }
 
-  throw { name: "servicesError", message: jsonResponse };
+  throw { message: jsonResponse };
 }
 
 const defaultServerURL = "https://wdd330-backend.onrender.com/";
@@ -29,19 +23,11 @@ export default class ExternalServices {
 
   async getData(category) {
     const data = await this.request(`products/search/${category}`);
-    if (Array.isArray(data)) {
-      return data;
-    }
-
-    return data.Result || [];
+    return data.Result;
   }
 
   async findProductById(id) {
     const data = await this.request(`product/${id}`);
-    if (Array.isArray(data)) {
-      return data.find((item) => item.Id === id);
-    }
-
     return data.Result;
   }
 

@@ -94,10 +94,16 @@ export default class CheckoutProcess {
 
   buildOrderData(formElement) {
     const orderData = this.formDataToJSON(formElement);
+    const items = this.cartItems;
+
+    if (!items.length) {
+      return null;
+    }
+
     this.calculateOrderTotal();
 
     orderData.orderDate = new Date().toISOString();
-    orderData.items = this.packageItems(this.cartItems);
+    orderData.items = this.packageItems(items);
     orderData.orderTotal = this.orderTotal.toFixed(2);
     orderData.shipping = this.shipping;
     orderData.tax = this.tax.toFixed(2);
@@ -105,44 +111,25 @@ export default class CheckoutProcess {
     return orderData;
   }
 
-  formatError(error) {
-    if (error?.name === "servicesError") {
-      const message = error.message;
-
-      if (typeof message === "string") {
-        return message;
-      }
-
-      if (Array.isArray(message?.errors)) {
-        return message.errors.join(" ");
-      }
-
-      if (message?.message) {
-        return message.message;
-      }
-
-      return "Checkout failed. Please review your information and try again.";
-    }
-
-    return "Something went wrong while placing your order. Please try again.";
-  }
-
   async checkout(formElement = this.form) {
     clearAlert();
 
-    if (!this.cartItems.length) {
-      alertMessage("Your cart is empty. Add at least one item before checkout.");
+    const order = this.buildOrderData(formElement);
+    if (!order) {
+      alertMessage("Your cart is empty. Add an item before checking out.");
       return;
     }
-
-    const order = this.buildOrderData(formElement);
 
     try {
       await this.services.checkout(order);
       setLocalStorage("so-cart", []);
       window.location.assign(`${import.meta.env.BASE_URL}checkout/success.html`);
     } catch (error) {
-      alertMessage(this.formatError(error));
+      const message =
+        error?.message?.message ||
+        error?.message ||
+        "Checkout failed. Please check your info and try again.";
+      alertMessage(message);
     }
   }
 }
