@@ -102,4 +102,5 @@ function removeItemFromCart(id) {
   updateCartCount();
 }
 
+
 renderCartContents();
